@@ -54,6 +54,7 @@ class ModuleGenerator extends BaseGenerator {
     yield this._wrapWrite('empty', this.getRoot(name, 'Models/Hooks/.gitkeep'));
     yield this._wrapWrite('empty', this.getRoot(name, 'Database/migrations/.gitkeep'));
     yield this._wrapWrite('empty', this.getRoot(name, 'Database/seeds/.gitkeep'));
+    yield this._wrapWrite('factory', this.getRoot(name, 'Database/factory.js'));
     yield this._wrapWrite('empty', this.getRoot(name, 'Views/.gitkeep'));
 
     yield this._wrapWrite('empty', this.getRoot(name, 'Ws/Controllers/.gitkeep'));
