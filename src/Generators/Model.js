@@ -66,7 +66,7 @@ class ModelGenerator extends BaseGenerator {
 
     const name = args.name
     const entity = this._makeEntityName(name, 'model', false, 'singular')
-    const toPath = path.join(this.helpers.appPath(), `Modules/${moduleName}/Model`, `${entity.entityPath}.js`)
+    const toPath = path.join(this.helpers.appPath(), `Modules/${moduleName}/Models`, `${entity.entityPath}.js`)
     const template = options.template || 'model'
     const templateOptions = {
       name: entity.entityName,
