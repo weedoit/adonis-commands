@@ -26,7 +26,8 @@ class ModelGenerator extends BaseGenerator {
     const tableFlag = '{-t,--table=@value:Specify an optional table name for the model}'
     const connectionFlag = '{-c, --connection=@value:Specify an optional connection for the model}'
     const templateFlag = '{--template=@value:Path to custom template for model file}'
-    return `make:model {name} ${migrationsFlag} ${tableFlag} ${connectionFlag} ${templateFlag}`
+    const moduleFlag = '{-M,--module=@value:Define the module of model}'
+    return `make:model {name} ${moduleFlag} ${migrationsFlag} ${tableFlag} ${connectionFlag} ${templateFlag}`
   }
 
   /**
@@ -48,9 +49,23 @@ class ModelGenerator extends BaseGenerator {
    * @public
    */
   * handle (args, options) {
+    let moduleName = options.module || null;
+
+    /**
+     * Prompting for controller module if not already defined
+     */
+    if (!moduleName) {
+      moduleName = yield this.choice('What module this model belongs ?', modules.getModules().map((m) => {
+        return {
+            name: m,
+            value: m
+        }
+      })).print()
+    }
+
     const name = args.name
     const entity = this._makeEntityName(name, 'model', false, 'singular')
-    const toPath = path.join(this.helpers.appPath(), 'Model', `${entity.entityPath}.js`)
+    const toPath = path.join(this.helpers.appPath(), `Modules/${moduleName}/Model`, `${entity.entityPath}.js`)
     const template = options.template || 'model'
     const templateOptions = {
       name: entity.entityName,

@@ -10,6 +10,7 @@
 */
 
 const BaseGenerator = require('./Base')
+const modules = require('../ModuleList')
 
 class SeedGenerator extends BaseGenerator {
 
@@ -20,7 +21,8 @@ class SeedGenerator extends BaseGenerator {
    * @public
    */
   get signature () {
-    return 'make:seed {name}'
+    const moduleFlag = '{-M,--module=@value:Define the module of seed}'
+    return 'make:seed {name} ${moduleFlag}'
   }
 
   /**
@@ -42,9 +44,23 @@ class SeedGenerator extends BaseGenerator {
    * @public
    */
   * handle (args, options) {
+    let moduleName = options.module || null;
+
+    /**
+     * Prompting for controller module if not already defined
+     */
+    if (!moduleName) {
+      moduleName = yield this.choice('What module this seed belongs ?', modules.getModules().map((m) => {
+        return {
+          name: m,
+          value: m
+        }
+      })).print()
+    }
+
     const name = args.name
     const entity = this._makeEntityName(name, 'seed', false)
-    const toPath = this.helpers.seedsPath(`${entity.entityName}Seeder.js`)
+    const toPath = path.join(this.helpers.appPath(), `Modules/${moduleName}/Database/migrations`, `${entity.entityName}Seeder.js`)
     const templateOptions = { name: entity.entityPath }
     yield this._wrapWrite('seed', toPath, templateOptions)
   }

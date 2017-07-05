@@ -10,6 +10,8 @@
 */
 const BaseGenerator = require('./Base')
 const i = require('inflect')
+const path = require('path')
+const modules = require('../ModuleList')
 
 class MigrationGenerator extends BaseGenerator {
   /**
@@ -23,7 +25,8 @@ class MigrationGenerator extends BaseGenerator {
     const tableFlag = '{-t,--table=@value:Select table for alteration}'
     const connectionFlag = '{-c,--connection=@value:Specify connection to be used for migration}'
     const templateFlag = '{--template=@value:Path to custom template for migration file}'
-    return `make:migration {name} ${createFlag} ${tableFlag} ${connectionFlag} ${templateFlag}`
+    const moduleFlag = '{-M,--module=@value:Define the module of migration}'
+    return `make:migration {name} ${moduleFlag} ${createFlag} ${tableFlag} ${connectionFlag} ${templateFlag}`
   }
 
   /**
@@ -45,9 +48,23 @@ class MigrationGenerator extends BaseGenerator {
    * @public
    */
   * handle (args, options) {
+    let moduleName = options.module || null;
+
+    /**
+     * Prompting for controller module if not already defined
+     */
+    if (!moduleName) {
+      moduleName = yield this.choice('What module this model belongs ?', modules.getModules().map((m) => {
+        return {
+            name: m,
+            value: m
+        }
+      })).print()
+    }
+
     const name = args.name
     const entity = this._makeEntityName(name, 'migration', false)
-    const toPath = this.helpers.migrationsPath(`${new Date().getTime()}_${name}.js`)
+    const toPath = path.join(this.helpers.appPath(), `Modules/${moduleName}/Database/migrations`, `${new Date().getTime()}_${name}.js`)
     const template = options.template || 'migration'
     const table = options.create || options.table || i.underscore(entity.entityName)
     const templateOptions = {

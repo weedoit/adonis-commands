@@ -11,6 +11,7 @@
 
 const BaseGenerator = require('./Base')
 const path = require('path')
+const modules = require('../ModuleList')
 
 class MiddlewareGenerator extends BaseGenerator {
 
@@ -21,7 +22,7 @@ class MiddlewareGenerator extends BaseGenerator {
    * @public
    */
   get signature () {
-    const templateFlag = '{--template=@value:Path to custom template for middleware file}'
+    const templateFlag = '{--template=@value:Path to custom template for middleware file} {-M,--module=@value:Define the module of middleware}'
     return `make:middleware {name} ${templateFlag}`
   }
 
@@ -45,9 +46,23 @@ class MiddlewareGenerator extends BaseGenerator {
    * @public
    */
   * handle (args, options) {
+    let moduleName = options.module || null;
+
+    /**
+     * Prompting for controller module if not already defined
+     */
+    if (!moduleName) {
+      moduleName = yield this.choice('What module this middleware belongs ?', modules.getModules().map((m) => {
+        return {
+            name: m,
+            value: m
+        }
+      })).print()
+    }
+
     const name = args.name
     const entity = this._makeEntityName(name, 'middleware', false)
-    const toPath = path.join(this.helpers.appPath(), 'Http/Middleware', `${entity.entityPath}.js`)
+    const toPath = path.join(this.helpers.appPath(), `Modules/${moduleName}/Middlewares`, `${entity.entityPath}.js`)
     const template = options.template || 'middleware'
     const templateOptions = {
       name: entity.entityName

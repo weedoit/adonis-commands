@@ -11,6 +11,7 @@
 
 const BaseGenerator = require('./Base')
 const path = require('path')
+const modules = require('../ModuleList')
 
 class ControllerGenerator extends BaseGenerator {
 
@@ -21,7 +22,7 @@ class ControllerGenerator extends BaseGenerator {
    * @public
    */
   get signature () {
-    return 'make:controller {name} {-t,--type=@value:Define the type of controller} {-r,--resource?:Create a resourceful Controller}'
+    return 'make:controller {name} {-t,--type=@value:Define the type of controller} {-M,--module=@value:Define the module of controller} {-r,--resource?:Create a resourceful Controller}'
   }
 
   /**
@@ -45,7 +46,9 @@ class ControllerGenerator extends BaseGenerator {
   * handle (args, options) {
     const name = args.name
     const entity = this._makeEntityName(name, 'controller', true)
-    let controllerType = options.type || null
+
+    let controllerType = options.type || null;
+    let moduleName = options.module || null;
 
     /**
      * Prompting for controller type if not already defined
@@ -60,7 +63,20 @@ class ControllerGenerator extends BaseGenerator {
       }]).print()
     }
 
-    const controllersPath = controllerType === 'http' ? 'Http/Controllers' : 'Ws/Controllers'
+
+    /**
+     * Prompting for controller module if not already defined
+     */
+    if (!moduleName) {
+      moduleName = yield this.choice('What module this controller belongs ?', modules.getModules().map((m) => {
+        return {
+            name: m,
+            value: m
+        }
+      })).print()
+    }
+
+    const controllersPath = controllerType === 'http' ? `Modules/${moduleName}/Controllers` : `Modules/${moduleName}/Ws/Controllers`
     const template = controllerType === 'http' ? 'controller' : 'ws-controller'
 
     const toPath = path.join(this.helpers.appPath(), controllersPath, `${entity.entityPath}.js`)

@@ -1,0 +1,49 @@
+'use strict';
+
+{{#ws}}
+const MODULE = __dirname.split('/').slice(-2, -1);
+const Ws = use('Ws');
+
+/*
+|--------------------------------------------------------------------------
+| Named Middleware
+|--------------------------------------------------------------------------
+|
+| Named middleware are key/value pairs. Keys are later used on websocket
+| channels.
+|
+*/
+const namedMiddleware = {
+    //`${MODULE}:auth`: 'Adonis/Middleware/Auth'
+};
+
+/*
+|--------------------------------------------------------------------------
+| Register Middleware
+|--------------------------------------------------------------------------
+|
+| Here we finally register our defined middleware to Middleware provider.
+|
+*/
+Ws.named(namedMiddleware);
+
+{{/ws}}
+{{^ws}}
+const MODULE = __dirname.split('/').pop();
+const Middleware = use('Middleware');
+
+/*
+|--------------------------------------------------------------------------
+| Named Middleware
+|--------------------------------------------------------------------------
+|
+| Named middleware are key/value pairs. Keys are later used on routes
+| which binds middleware to specific routes.
+|
+*/
+const namedMiddleware = {
+    //`${MODULE}:auth`: 'Adonis/Middleware/Auth'
+};
+
+Middleware.named(namedMiddleware);
+{{/ws}}

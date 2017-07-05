@@ -1,0 +1,41 @@
+'use strict';
+
+{{#ws}}
+/*
+|-----------------------------------------------------------------------------
+| Web Socket
+|-----------------------------------------------------------------------------
+|
+| WebSocket provider makes it so simple for you to write realtime applications
+| with the power of channels and dynamic rooms. Make use of this file to
+| define channels and bind controllers next to them.
+|
+*/
+
+const MODULE = __dirname.split('/').slice(-2, -1);
+const Ws = use('Ws');
+
+//Ws.channel(`${MODULE}/chat`, 'ChatController');
+{{/ws}}
+{{^ws}}
+/*
+|--------------------------------------------------------------------------
+| Router
+|--------------------------------------------------------------------------
+|
+| AdonisJs Router helps you in defining urls and their actions. It supports
+| all major HTTP conventions to keep your routes file descriptive and
+| clean.
+*/
+
+const MODULE = __dirname.split('/').pop();
+const Route = use('Route');
+
+Route.group(`${MODULE}-routes`, function () {
+    /*
+    | Route.get('/user', 'Module@UserController.index');
+    | Route.post('/user', 'Module@UserController.store');
+    | Route.resource('user', 'Module@UserController');
+    */
+}).prefix(MODULE);
+{{/ws}}

@@ -1,21 +1,21 @@
-'use strict'
+'use strict';
 
-const Lucid = use('Lucid')
+const Lucid = use('Lucid');
 
 class {{name}} extends Lucid {
 
-  {{#connection}}
-  static get connection () {
-    return '{{connection}}'
-  }
+    {{#connection}}
+    static get connection () {
+        return '{{connection}}';
+    }
 
-  {{/connection}}
-  {{#table}}
-  static get table () {
-    return '{{table}}'
-  }
+    {{/connection}}
+    {{#table}}
+    static get table () {
+        return '{{table}}';
+    }
 
-  {{/table}}
+    {{/table}}
 }
 
-module.exports = {{name}}
+module.exports = {{name}};
