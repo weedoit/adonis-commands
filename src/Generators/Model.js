@@ -12,6 +12,7 @@
 const BaseGenerator = require('./Base')
 const path = require('path')
 const i = require('inflect')
+const modules = require('../ModuleList')
 
 class ModelGenerator extends BaseGenerator {
 
