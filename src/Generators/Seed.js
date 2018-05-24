@@ -11,6 +11,7 @@
 
 const BaseGenerator = require('./Base')
 const modules = require('../ModuleList')
+const path = require('path')
 
 class SeedGenerator extends BaseGenerator {
 
@@ -22,7 +23,7 @@ class SeedGenerator extends BaseGenerator {
    */
   get signature () {
     const moduleFlag = '{-M,--module=@value:Define the module of seed}'
-    return 'make:seed {name} ${moduleFlag}'
+    return `make:seed {name} ${moduleFlag}`
   }
 
   /**
