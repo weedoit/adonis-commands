@@ -61,7 +61,7 @@ class SeedGenerator extends BaseGenerator {
 
     const name = args.name
     const entity = this._makeEntityName(name, 'seed', false)
-    const toPath = path.join(this.helpers.appPath(), `Modules/${moduleName}/Database/migrations`, `${entity.entityName}Seeder.js`)
+    const toPath = path.join(this.helpers.appPath(), `Modules/${moduleName}/Database/seeds`, `${entity.entityName}Seeder.js`)
     const templateOptions = { name: entity.entityPath }
     yield this._wrapWrite('seed', toPath, templateOptions)
   }
